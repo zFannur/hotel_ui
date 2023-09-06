@@ -30,7 +30,9 @@ class RoomsPage extends StatelessWidget {
           } else if (state is Loaded) {
             return _Room(rooms: state.rooms, name: name);
           } else if (state is Error) {
-            return ServerError(message: state.message);
+            return ServerError(message: state.message, reload: () {
+              context.read<RoomsBloc>().add(GetRoomsEvent());
+            },);
           } else {
             return const UnknownError();
           }

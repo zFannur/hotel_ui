@@ -54,27 +54,12 @@ class _AboutBuyerWidgetState extends State<AboutBuyerWidget> {
           ),
           NumberTextFieldWidget(
             controller: _numberController,
-            validator: (val) {
-              if (!val.toString().isValidPhone) {
-                return false;
-              } else {
-                return true;
-              }
-            },
           ),
           SizedBox(
             height: 8 * fem,
           ),
-          CustomTextFieldWidget(
+          EmailTextFieldWidget(
             controller: _emailController,
-            name: 'Почта',
-            validator: (val) {
-              if (!val.toString().isValidEmail) {
-                return false;
-              } else {
-                return true;
-              }
-            },
           ),
           Container(
             margin: EdgeInsets.fromLTRB(0 * fem, 10 * fem, 3 * fem, 0 * fem),
@@ -95,33 +80,5 @@ class _AboutBuyerWidgetState extends State<AboutBuyerWidget> {
         ],
       ),
     );
-  }
-}
-
-extension extString on String {
-  bool get isValidEmail {
-    final emailRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    return emailRegExp.hasMatch(this);
-  }
-
-  bool get isValidName {
-    final nameRegExp =
-        RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$");
-    return nameRegExp.hasMatch(this);
-  }
-
-  bool get isValidPassword {
-    final passwordRegExp = RegExp(
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\><*~]).{8,}/pre>');
-    return passwordRegExp.hasMatch(this);
-  }
-
-  bool get isNotNull {
-    return this != null;
-  }
-
-  bool get isValidPhone {
-    final phoneRegExp = RegExp(r"^((8|\+7)[\- ]?)?\(?\d{3,5}\)?[\- ]?\d{1}[\- ]?\d{1}[\- ]?\d{1}[\- ]?\d{1}[\- ]?\d{1}(([\- ]?\d{1})?[\- ]?\d{1}?[\- ]?\d{1})?$");
-    return phoneRegExp.hasMatch(this);
   }
 }

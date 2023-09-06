@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_test/entity/booking.dart';
 import 'package:job_test/presentation/bloc/booking_bloc/booking_bloc.dart';
+import 'package:job_test/presentation/bloc/form_validate_bloc/form_validate_bloc.dart';
 import 'package:job_test/presentation/pages/paid_page.dart';
 import 'package:job_test/presentation/widgets/about_booking_widget.dart';
 import 'package:job_test/presentation/widgets/about_buyer_widget.dart';
@@ -14,6 +15,8 @@ import 'package:job_test/presentation/widgets/about_hotel_widget.dart';
 import 'package:job_test/presentation/widgets/rating_widget.dart';
 import 'package:job_test/presentation/widgets/tourist_information_widget.dart';
 import 'package:intl/intl.dart';
+
+final formKey = GlobalKey<FormState>();
 
 class BookingPage extends StatelessWidget {
   const BookingPage({super.key});
@@ -32,7 +35,9 @@ class BookingPage extends StatelessWidget {
           } else if (state is Loaded) {
             return _Booking(booking: state.booking);
           } else if (state is Error) {
-            return ServerError(message: state.message);
+            return ServerError(message: state.message, reload: () {
+              context.read<BookingBloc>().add(GetBookingEvent());
+            },);
           } else {
             return const UnknownError();
           }
@@ -52,7 +57,6 @@ class _Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<_Booking> {
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -94,15 +98,8 @@ class _BookingState extends State<_Booking> {
                     ],
                   )),
               AboutBookingWidget(booking: widget.booking),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    AboutBuyerWidget(booking: widget.booking),
-                    const TouristInformationBlocWidget(),
-                  ],
-                ),
-              ),
+              AboutBuyerWidget(booking: widget.booking),
+              const TouristInformationBlocWidget(),
               Container(
                 margin:
                     EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 10 * fem),
@@ -246,10 +243,13 @@ class _BookingState extends State<_Booking> {
                 ),
                 child: SelectButtonWidget(
                     onTap: () {
-                      if (_formKey.currentState!.validate()) {
+                      //formKey.currentState!.validate();
+                      //final label = context.read<FormValidateBloc>().state.formKey![0];
+                      //final key = LabeledGlobalKey<FormState>(label);
+                      //if (key.currentState!.validate()) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const PaidPage()));
-                      }
+                      //}
                     },
                     text:
                         'Оплатить ${formatter.format(widget.booking.tourPrice + widget.booking.fuelCharge + widget.booking.serviceCharge).replaceAll(',', ' ')} ₽'),

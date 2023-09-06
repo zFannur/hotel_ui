@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:job_test/presentation/bloc/form_validate_bloc/form_validate_bloc.dart';
 import 'package:job_test/presentation/widgets/custom_text_field_widget.dart';
 import 'package:expansion_widget/expansion_widget.dart';
 import 'dart:math' as math;
 import 'package:job_test/core/config/app_config.dart';
 import 'package:job_test/utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TouristInformationBlocWidget extends StatefulWidget {
   const TouristInformationBlocWidget({super.key});
@@ -16,11 +18,11 @@ class TouristInformationBlocWidget extends StatefulWidget {
 class _TouristInformationBlocWidgetState
     extends State<TouristInformationBlocWidget> {
   List<String> listNumTourist = [
-    'Первый турист ',
-    'Второй турист ',
-    'Третий турист ',
-    'Четвертый турист ',
-    'Пятый турист ',
+    'Первый турист',
+    'Второй турист',
+    'Третий турист',
+    'Четвертый турист',
+    'Пятый турист',
   ];
 
   List<Widget> touristInformationList = [
@@ -31,6 +33,12 @@ class _TouristInformationBlocWidgetState
       isExpanded: true,
     ),
   ];
+
+  @override
+  void initState() {
+    context.read<FormValidateBloc>().add(const ChangeFormEvent(form: {'Первый турист ': 'Первый турист '}));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +79,13 @@ class _TouristInformationBlocWidgetState
                 onTap: () {
                   touristInformationList.add(
                     TouristInformationWidget(
-                      countName:
-                          listNumTourist[touristInformationList.length],
+                      countName: listNumTourist[touristInformationList.length],
                       name: '',
                       firstName: '',
                       isExpanded: false,
                     ),
                   );
+                  context.read<FormValidateBloc>().add(ChangeFormEvent(form: {listNumTourist[touristInformationList.length]: listNumTourist[touristInformationList.length]}));
                   setState(() {});
                 },
                 child: Container(
@@ -143,81 +151,83 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
   Widget build(BuildContext context) {
     double fem = MediaQuery.of(context).size.width / AppConfig.baseWidth;
     double ffem = fem * AppConfig.femValue;
+    final bloc = context.read<FormValidateBloc>().state;
 
     return ExpansionWidget(
-        initiallyExpanded: widget.isExpanded,
-        titleBuilder:
-            (double animationValue, _, bool isExpaned, toogleFunction) {
-          return InkWell(
-              onTap: () => toogleFunction(animated: true),
-              child: Container(
-                margin: !isExpaned
-                    ? EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem)
-                    : const EdgeInsets.all(0),
-                padding:
-                    EdgeInsets.fromLTRB(16 * fem, 13 * fem, 16 * fem, 16 * fem),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: isExpaned
-                      ? BorderRadius.only(
-                          topLeft: Radius.circular(12 * fem),
-                          topRight: Radius.circular(12 * fem),
-                        )
-                      : BorderRadius.circular(12 * fem),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.countName,
-                        style: SafeGoogleFont(
-                          'SF Pro Display',
-                          fontSize: 22 * ffem,
-                          fontWeight: FontWeight.w500,
-                          height: 1.2000000694 * ffem / fem,
-                          color: const Color(0xff000000),
-                        ),
+      initiallyExpanded: widget.isExpanded,
+      titleBuilder: (double animationValue, _, bool isExpaned, toogleFunction) {
+        return InkWell(
+            onTap: () => toogleFunction(animated: true),
+            child: Container(
+              margin: !isExpaned
+                  ? EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem)
+                  : const EdgeInsets.all(0),
+              padding:
+                  EdgeInsets.fromLTRB(16 * fem, 13 * fem, 16 * fem, 16 * fem),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xffffffff),
+                borderRadius: isExpaned
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(12 * fem),
+                        topRight: Radius.circular(12 * fem),
+                      )
+                    : BorderRadius.circular(12 * fem),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.countName,
+                      style: SafeGoogleFont(
+                        'SF Pro Display',
+                        fontSize: 22 * ffem,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2000000694 * ffem / fem,
+                        color: const Color(0xff000000),
                       ),
                     ),
-                    Padding(
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        0 * fem, 0 * fem, 32 * fem, 0 * fem),
+                    child: Container(
                       padding: EdgeInsets.fromLTRB(
-                          0 * fem, 0 * fem, 32 * fem, 0 * fem),
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(
-                            8 * fem, 8 * fem, 8 * fem, 8 * fem),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE9F1FF),
-                          borderRadius: BorderRadius.circular(12 * fem),
-                        ),
-                        child: Transform.rotate(
-                          angle: math.pi * animationValue,
-                          alignment: Alignment.center,
-                          child: Transform.rotate(
-                              angle: 180 * math.pi / 120,
-                              child: const Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Color(0xFF008FFF),
-                              )),
-                        ),
+                          8 * fem, 8 * fem, 8 * fem, 8 * fem),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9F1FF),
+                        borderRadius: BorderRadius.circular(12 * fem),
                       ),
-                    )
-                  ],
-                ),
-              ));
-        },
-        content: Container(
-          margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem),
-          padding: EdgeInsets.fromLTRB(16 * fem, 13 * fem, 16 * fem, 16 * fem),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: const Color(0xffffffff),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(12 * fem),
-              bottomRight: Radius.circular(12 * fem),
-            ),
+                      child: Transform.rotate(
+                        angle: math.pi * animationValue,
+                        alignment: Alignment.center,
+                        child: Transform.rotate(
+                            angle: 180 * math.pi / 120,
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Color(0xFF008FFF),
+                            )),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ));
+      },
+      content: Container(
+        margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 8 * fem),
+        padding: EdgeInsets.fromLTRB(16 * fem, 13 * fem, 16 * fem, 16 * fem),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color(0xffffffff),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(12 * fem),
+            bottomRight: Radius.circular(12 * fem),
           ),
+        ),
+        child: Form(
+          key: LabeledGlobalKey<FormState>(bloc.formKey?[widget.countName]),
           child: Column(
             children: [
               CustomTextFieldWidget(
@@ -231,7 +241,6 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
               CustomTextFieldWidget(
                 controller: firstNameController,
                 name: 'Фамилия',
-                validator: isNotNullValidator,
               ),
               SizedBox(
                 height: 8 * fem,
@@ -239,7 +248,6 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
               CustomTextFieldWidget(
                 controller: dateBornController,
                 name: 'Дата рождения',
-                validator: isNotNullValidator,
               ),
               SizedBox(
                 height: 8 * fem,
@@ -247,7 +255,6 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
               CustomTextFieldWidget(
                 controller: countryController,
                 name: 'Гражданство',
-                validator: isNotNullValidator,
               ),
               SizedBox(
                 height: 8 * fem,
@@ -255,7 +262,6 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
               CustomTextFieldWidget(
                 controller: passwordNumberController,
                 name: 'Номер загранпаспорта',
-                validator: isNotNullValidator,
               ),
               SizedBox(
                 height: 8 * fem,
@@ -263,18 +269,18 @@ class _TouristInformationWidgetState extends State<TouristInformationWidget> {
               CustomTextFieldWidget(
                 controller: passwordDateEndController,
                 name: 'Срок действия загранпаспорта',
-                validator: isNotNullValidator,
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
-  bool isNotNullValidator(String? val) {
+  String? isNotNullValidator(String? val) {
     if (val?.isEmpty ?? true) {
-      return false;
-    } else {
-      return true;
+      return '';
     }
+    return null;
   }
 }

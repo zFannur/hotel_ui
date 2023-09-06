@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_test/presentation/bloc/booking_bloc/booking_bloc.dart';
+import 'package:job_test/presentation/bloc/form_validate_bloc/form_validate_bloc.dart';
 import 'package:job_test/presentation/bloc/hotel_bloc/hotel_bloc.dart';
 import 'package:job_test/presentation/bloc/rooms_bloc/rooms_bloc.dart';
 import 'package:job_test/presentation/pages/hotel_page.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => BookingBloc()..add(GetBookingEvent()),
+        ),
+        BlocProvider(
+          create: (context) => FormValidateBloc(),
         ),
       ],
       child: MaterialApp(

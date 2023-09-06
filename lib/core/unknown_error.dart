@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:job_test/presentation/bloc/hotel_bloc/hotel_bloc.dart';
 
 class UnknownError extends StatelessWidget {
   const UnknownError({
@@ -40,15 +42,18 @@ class UnknownError extends StatelessWidget {
 
 class ServerError extends StatelessWidget {
   final String message;
+  final void Function()? reload;
+
   const ServerError({
-    Key? key, required this.message,
+    Key? key,
+    required this.message, required this.reload,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(
@@ -63,6 +68,10 @@ class ServerError extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+          ),
+          ElevatedButton(
+            onPressed: reload,
+            child: Text('reload'),
           ),
         ],
       ),

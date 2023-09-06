@@ -28,7 +28,9 @@ class HotelPage extends StatelessWidget {
           } else if (state is Loaded) {
             return _Hotel(hotel: state.hotel);
           } else if (state is Error) {
-            return ServerError(message: state.message);
+            return ServerError(message: state.message, reload: () {
+              context.read<HotelBloc>().add(GetHotelEvent());
+            },);
           } else {
             return const UnknownError();
           }
